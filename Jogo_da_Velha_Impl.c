@@ -252,7 +252,6 @@ int main()
             computerTurn(board);
             showBoard(board);
             winner = checkWinner(board);
-            printf("Winner : %d\n", winner);
             if (winner != 3) // The game has draw or winner
                 isPlaying = 0;
             else
