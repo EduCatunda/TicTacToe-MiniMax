@@ -217,7 +217,6 @@ void playTurn(char sPlayer, char board[3][3])
 
 void computerTurn(char board[3][3])
 {
-    printf("\n\nComputer turn\n");
     int i = miniMaxAB(board, 0, -INT_MAX, INT_MAX, 1);
     fillSquare(i, sOpponent, board);
     printf("Computador jogou um %c na casa %d\n\n", sOpponent, i);
@@ -244,7 +243,6 @@ int main()
             playTurn(sPlayer, board);
             showBoard(board);
             winner = checkWinner(board);
-            printf("Winner : %d\n", winner);
             if (winner != 3) // The game has draw or winner
                 isPlaying = 0;
             else
