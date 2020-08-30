@@ -24,6 +24,9 @@ char board[3][3] = {
     {'4', '5', '6'},
     {'7', '8', '9'}};
 
+char sPlayer = 'X', sOpponent = 'O';    
+
+
 char boardLines[] = "   |   |   ";
 void showBoard(const char board[3][3])
 {
@@ -37,18 +40,19 @@ void showBoard(const char board[3][3])
     }
 }
 
+// index is num 1-9, character is x or o, returns 0 if another move is already there
 int fillSquare(int index, char character, char board[3][3])
 {
     int row = (index - 1) / 3;
     int col = (index - 1) % 3;
-    if (board[row][col] == 'X' || board[row][col] == 'O')
+    if (board[row][col] == 'X' || board[row][col] == 'O' || row > 2 || col > 2)
         return 0;
-    board[row][col] = character;
 
+    board[row][col] = character;
     return 1;
 }
 
-// Fills the nth space, returns index of filled square
+// fills the nth space, returns index of filled square
 int fillEmpty(int index, char character, char board[3][3])
 {
     int counting = 0;
@@ -64,6 +68,7 @@ int fillEmpty(int index, char character, char board[3][3])
             }
 }
 
+// count how many empty spaces have in the board
 int countNumEmpty(char board[3][3])
 {
     int counting = 0;
@@ -76,26 +81,27 @@ int countNumEmpty(char board[3][3])
 
 int firstPlayer = 0, stage = 0;
 int player = 0, opponent = 1;
-void firstToPlay()
+
+// find out the first to play randomly, returns 0 if is X and 1 if is O
+int firstToPlay()
 {
     // X is 0, O is 1
     srand(time(NULL));
     int order = rand() % 2;
     firstPlayer = order;
-    if (firstPlayer == player) stage = 1;
-    else stage = 2;
+    if (firstPlayer == player) 
+        stage = 1;
+    else 
+        stage = 2;
 
-    printf("\nDefinindo aleatoriamente o primeiro jogador...\n\n");
-    printf("O primeiro jogador sera ");
-    if (order)
-        printf("O!\n\n");
-    else
-        printf("o X!\n\n");
+    return order;
 }
 
+// check if there is a winner, or a draw or if the game is still going, 
+// returns 0 to X, 1 to O, 2 to draw and 3 if the game is still going
 int checkWinner(char board[3][3])
 {
-    // X is 0, O is 1, draw is 2 and if the game is still going is 3
+    
     for (int i = 0; i < 3; ++i){
         // check horizontal
         if (board[0][i] == board[1][i] && board[1][i] == board[2][i])
@@ -112,17 +118,17 @@ int checkWinner(char board[3][3])
         return board[0][2] == 'X' ? 0 : 1;;
 
     // check draw
-    for (int x = 0; x < 3; ++x){
-        for (int y = 0; y < 3; ++y){
-            if (board[x][y] != 'X' && board[x][y] != 'O');
+    for (int x = 0; x < 3; x++){
+        for (int y = 0; y < 3; y++){
+            if (board[x][y] != 'X' && board[x][y] != 'O')
                 return 3; // (false) the game is still going;
         }
     }
     return 2; // means that it was a draw
 }
 
-//int count = 0;
-char sPlayer = 'X', sOpponent = 'O';
+
+// Algorithm MiniMax with pruning alpha beta
 int miniMaxAB(char board[3][3], int depth, int alpha, int beta, int isMaximizer)
 {
     int bestIndex;
@@ -173,6 +179,7 @@ int miniMaxAB(char board[3][3], int depth, int alpha, int beta, int isMaximizer)
     }
 }
 
+// choose the letter to play, X or O
 void chooseSymbol()
 {
     // X is 0, O is 1
@@ -219,10 +226,17 @@ void computerTurn(char board[3][3])
 int main()
 {
     chooseSymbol();
-    firstToPlay();
+    
+    printf("\nDefinindo aleatoriamente o primeiro jogador...\n\n");
+    printf("O primeiro jogador sera ");
+    if (firstToPlay())
+        printf("O!\n\n");
+    else
+        printf("o X!\n\n");
 
     printf("Tabuleiro:\n");
     showBoard(board);
+    
     int isPlaying = 1;
     int winner;
     while (isPlaying == 1){
@@ -230,6 +244,7 @@ int main()
             playTurn(sPlayer, board);
             showBoard(board);
             winner = checkWinner(board);
+            printf("Winner : %d\n", winner);
             if (winner != 3) // The game has draw or winner
                 isPlaying = 0;
             else
@@ -239,6 +254,7 @@ int main()
             computerTurn(board);
             showBoard(board);
             winner = checkWinner(board);
+            printf("Winner : %d\n", winner);
             if (winner != 3) // The game has draw or winner
                 isPlaying = 0;
             else
