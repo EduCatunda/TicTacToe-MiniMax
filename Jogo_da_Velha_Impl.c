@@ -12,7 +12,7 @@ void showBoard(const char board[3][3]);
 int fillSquare(int index, char character, char board[3][3]);
 int fillEmpty(int index, char character, char board[3][3]);
 int countNumEmpty(char board[3][3]);
-void firstToPlay();
+int firstToPlay();
 int checkWinner(char board[3][3]);
 int miniMaxAB(char board[3][3], int depth, int alpha, int beta, int isMaximizer);
 void chooseSymbol();
