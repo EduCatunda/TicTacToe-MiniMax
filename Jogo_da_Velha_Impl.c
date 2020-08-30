@@ -48,7 +48,7 @@ int fillSquare(int index, char character, char board[3][3])
     return 1;
 }
 
-//Fills the nth space, returns index of filled square
+// Fills the nth space, returns index of filled square
 int fillEmpty(int index, char character, char board[3][3])
 {
     int counting = 0;
@@ -56,8 +56,9 @@ int fillEmpty(int index, char character, char board[3][3])
         for (int y = 0; y < 3; ++y)
             if (board[x][y] != 'X' && board[x][y] != 'O'){
                 if (counting == index){
-                    fillSquare(3 * x + y + 1, character, board);
-                    return 3 * x + y + 1;
+                    int position = (3 * x) + y + 1;
+                    fillSquare(position, character, board);
+                    return position;
                 }
                 ++counting;
             }
@@ -70,6 +71,7 @@ int countNumEmpty(char board[3][3])
         for (int y = 0; y < 3; ++y)
             if (board[x][y] != 'X' && board[x][y] != 'O')
                 ++counting;
+    return counting;
 }
 
 int firstPlayer = 0, stage = 0;
@@ -88,7 +90,7 @@ void firstToPlay()
     if (order)
         printf("O!\n\n");
     else
-        printf("X!\n\n");
+        printf("o X!\n\n");
 }
 
 int checkWinner(char board[3][3])
@@ -194,7 +196,7 @@ void playTurn(char sPlayer, char board[3][3])
 {
     int result = 0, num = 0;
     while (result == 0){
-        printf("Digite o numero da casa o qual deseja jogar o %c (1 ate 9) ", sPlayer);
+        printf("\n\nDigite o numero da casa o qual deseja jogar o %c (1 ate 9) ", sPlayer);
         scanf("%d", &num);
 
         while (num < 1 || num > 9){
@@ -208,9 +210,8 @@ void playTurn(char sPlayer, char board[3][3])
 
 void computerTurn(char board[3][3])
 {
-    printf("Computer turn\n");
+    printf("\n\nComputer turn\n");
     int i = miniMaxAB(board, 0, -INT_MAX, INT_MAX, 1);
-    printf("Computer turn\n");
     fillSquare(i, sOpponent, board);
     printf("Computador jogou um %c na casa %d\n\n", sOpponent, i);
 }
@@ -223,8 +224,8 @@ int main()
     printf("Tabuleiro:\n");
     showBoard(board);
     int isPlaying = 1;
-    while (isPlaying){
-        int winner;
+    int winner;
+    while (isPlaying == 1){
         if (stage == 1){
             playTurn(sPlayer, board);
             showBoard(board);
@@ -244,6 +245,12 @@ int main()
                 stage = 1;
         }
     }
+    if (winner == 0)
+        printf("\n\nO vencedor eh X!");
+    else if (winner == 1)
+        printf("\n\nO vencedor eh O!");
+    else
+        printf("\n\nDeu velha!");
 
     return 0;
 }
